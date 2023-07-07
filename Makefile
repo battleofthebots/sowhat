@@ -9,7 +9,7 @@ FLAGS=-Wall -ggdb
 all: sharedobject sowhat
 
 sowhat:
-	$(CC) $(FLAGS) -lz -I ./inc/ ./src/* -o sowhat
+	$(CC) $(FLAGS) -I ./inc/ ./src/* -o sowhat -lz -ldl
 
 # generate shared object for testing
 sharedobject:
