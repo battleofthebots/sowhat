@@ -3,8 +3,8 @@ The challenge loads an execute a Shared Object. This challenge mimicks a "update
 
 
 ## Static RE Challenge
-1. What is the SO symbol required to be for execution?
-2. What is the max size of a shared object it'll take?
+2. What port does the update service listen on?
+3. What is the SO symbol required to be for execution?
 
 ## Building
 TODO
