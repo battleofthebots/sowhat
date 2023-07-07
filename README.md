@@ -7,8 +7,13 @@ The challenge loads an execute a Shared Object. This challenge mimicks a "update
 3. What is the SO symbol required to be for execution?
 
 ## Building
-TODO
+1. ```docker build . -t ghcr.io/battleofthebots/cgc:sowhat```
 
+## Running
+
+``` sh
+$> docker run -p 1776:1776 -ti ghcr.io/battleofthebots/cgc:sowhat
+```
 
 ## PoC Script
 The Makefile builds a temporary shared object (```sowut_test.so```)that executes "id" and writes it to a file "lol" int the /tmp directory.
