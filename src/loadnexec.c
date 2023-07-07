@@ -1,5 +1,4 @@
-#include "loadnexec.h"
-
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <fcntl.h>
 #include <sys/mman.h>
@@ -7,15 +6,18 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <zlib.h>
+#include <dlfcn.h>
+#include "base64.h"
+#include "loadnexec.h"
 
-int mem_dlexec(char *so_buffer) {
+int mem_dlexec(char *so_buffer, int buffer_size) {
 
-    int fd = memfd_create("SO_MEM", NULL);
-    if (fd == NULL) {
+    int fd = memfd_create("SO_MEM", 0);
+    if (fd < 0) {
         fprintf(stderr, "Error, could not create memfd memory!");
         exit(1);
     }
-    write(fd, so_buffer, sizeof(so_buffer));
+    write(fd, so_buffer, buffer_size);
 
     // obtain file path to in-memory descriptor
     char *path = "/proc/self/fd/";
@@ -42,8 +44,11 @@ int mem_dlexec(char *so_buffer) {
 
 char *decode_and_decompress(char *buff, int buff_size){
 
+   // char *sharedobject = (char *)malloc(buff_size);
     char sharedobject[buff_size];
+    //char *b64_decoded = (char *)malloc(16120);
     char *b64_decoded = base64_decode(buff);
+
     int cbound = compressBound(buff_size);
     uLong upper = buff_size;
     int res = uncompress((Bytef *)sharedobject,
@@ -56,5 +61,9 @@ char *decode_and_decompress(char *buff, int buff_size){
         exit(1);
     }
 
-    return &sharedobject;
+    // copy decompressed buffer to char pointer and return
+    char *tmp = (char *)malloc(buff_size);
+    strncpy(tmp, sharedobject, buff_size);
+
+    return tmp;
 }

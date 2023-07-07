@@ -6,7 +6,7 @@
  * @param so_buffer, pointer to a char buffer containing a shared object.
  * @return a return code of zero indicates success, non-zero indicate a failure
  **/
-int mem_dlexec(char *so_buffer);
+int mem_dlexec(char *so_buffer, int buff_size);
 
 
 /**
