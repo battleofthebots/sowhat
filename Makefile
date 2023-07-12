@@ -6,10 +6,13 @@
 CC=gcc
 FLAGS=-Wall -ggdb
 
-all: sharedobject sowhat
+all: dir sharedobject sowhat
+
+dir:
+	mkdir ./bin/
 
 sowhat:
-	$(CC) $(FLAGS) -I ./inc/ ./src/* -o sowhat -lz -ldl
+	$(CC) $(FLAGS) -I ./inc/ ./src/* -o ./bin/sowhat -lz -ldl
 
 # generate shared object for testing
 sharedobject:
