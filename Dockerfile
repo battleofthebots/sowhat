@@ -1,5 +1,7 @@
-FROM ghcr.io/battleofthebots/botb-base-image:ubuntu-20.04-defcon-2023
+FROM ghcr.io/battleofthebots/botb-base-image:latest
+ARG NAME=sowhat
+LABEL org.opencontainers.image.title=$NAME org.opencontainers.image.description=$NAME org.opencontainers.image.url=https://github.com/battleofthebots/$NAME org.opencontainers.image.source=https://github.com/battleofthebots/$NAME org.opencontainers.image.version=main
 WORKDIR /opt/
 COPY . .
 RUN make
-ENTRYPOINT ["/opt/sowhat"]
+ENTRYPOINT ["/opt/bin/sowhat"]
