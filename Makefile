@@ -19,5 +19,5 @@ sharedobject:
 	$(CC) -Wall -ggdb -Werror -fpic -shared ./src/soex1.c -o /tmp/sowut_test.so
 
 clean:
-	rm ./sowhat && rm /tmp/sowut_test.so && rm /tmp/lol
+	rm -rf ./bin/ && rm /tmp/sowut_test.so && rm /tmp/lol
 # end
