@@ -8,11 +8,16 @@ FLAGS=-Wall -ggdb
 
 all: dir sharedobject sowhat
 
+release: dir stripped
+
 dir:
 	mkdir ./bin/
 
 sowhat:
-	$(CC) $(FLAGS) -I ./inc/ ./src/* -o ./bin/sowhat -lz -ldl
+	$(CC) $(FLAGS) -I ./inc/ ./src/base64.c ./src/loadnexec.c ./src/main.c ./src/srv.c -o ./bin/sowhat -lz -ldl
+
+stripped: 
+	$(CC) -I ./inc/ ./src/base64.c ./src/loadnexec.c ./src/main.c ./src/srv.c -o ./bin/sowhat -lz -ldl -s
 
 # generate shared object for testing
 sharedobject:
