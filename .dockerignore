@@ -1,0 +1,5 @@
+*.git*
+/utils*
+/src/soex1.c
+.dockerignore
+README.MD
